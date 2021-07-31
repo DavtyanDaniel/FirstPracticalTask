@@ -17,15 +17,15 @@ def my_split(string, delimiters= ' '):
 
 
 # it is a bubble sort
-def my_sort(sub_li):
-    l = len(sub_li)
+def my_sort(sub_list):
+    l = len(sub_list)
     for i in range(0, l):
         for j in range(0, l-i-1):
-            if sub_li[j][3] > sub_li[j + 1][3]:
-                tempo = sub_li[j]
-                sub_li[j] = sub_li[j + 1]
-                sub_li[j + 1] = tempo
-    return sub_li
+            if sub_list[j][-1] > sub_list[j + 1][-1]:
+                tempo = sub_list[j]
+                sub_list[j] = sub_list[j + 1]
+                sub_list[j + 1] = tempo
+    return sub_list
 
 RA_DEC = input('Please input equtorial cordinates(RA DEC)')
 RA_DEC_TUPLE = tuple(my_split(RA_DEC))
@@ -80,6 +80,9 @@ while i < NUMBER_OF_STARS:
                                pow(float(filtered_stars[i][1]) - float(RA_DEC_TUPLE[1]), 2))
     result[i].append(distance)
     i = i + 1
+
+# sorting by distance
+my_sort(result)
 
 for i in result:
     print(i)
