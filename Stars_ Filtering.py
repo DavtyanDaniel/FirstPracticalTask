@@ -1,4 +1,5 @@
 import csv
+import math
 
 def my_split(string, delimiters= ' '):
     result = []
@@ -75,8 +76,8 @@ i = 0
 while i < NUMBER_OF_STARS:
     result.append(filtered_stars[i])
 
-    distance = pow(float(filtered_stars[i][0]) - float(RA_DEC_TUPLE[0]), 2) + \
-                               pow(float(filtered_stars[i][1]) - float(RA_DEC_TUPLE[1]), 2)
+    distance = math.sqrt(pow(float(filtered_stars[i][0]) - float(RA_DEC_TUPLE[0]), 2) + \
+                               pow(float(filtered_stars[i][1]) - float(RA_DEC_TUPLE[1]), 2))
     result[i].append(distance)
     i = i + 1
 
