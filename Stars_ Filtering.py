@@ -1,5 +1,7 @@
 import csv
 import math
+from datetime import datetime
+
 
 def my_split(string, delimiters= ' '):
     result = []
@@ -16,24 +18,27 @@ def my_split(string, delimiters= ' '):
     return result
 
 
-# it is a bubble sort
+# it is a bubble sort (sorting by last element of list)
 def my_sort(sub_list):
-    l = len(sub_list)
-    for i in range(0, l):
-        for j in range(0, l-i-1):
+    list1 = len(sub_list)
+    for i in range(0, list1):
+        for j in range(0, list1-i-1):
             if sub_list[j][-1] > sub_list[j + 1][-1]:
                 tempo = sub_list[j]
                 sub_list[j] = sub_list[j + 1]
                 sub_list[j + 1] = tempo
     return sub_list
 
+
 RA_DEC = input('Please input equtorial cordinates(RA DEC)')
 RA_DEC_TUPLE = tuple(my_split(RA_DEC))
 FOV_H_V = input("Please enter HFOV and VFOV")
 FOV_H_V_TUPLE = tuple(my_split(FOV_H_V))
 NUMBER_OF_STARS = int(input("Please enter the number of stars"))
+filtered_stars = []
+result = []
 
-with open("337.all.tsv", 'r') as tsv_file:
+with open("cleaned_stars.tsv", 'r') as tsv_file:
 
     next(tsv_file)
     # get number of columns
@@ -52,6 +57,7 @@ with open("337.all.tsv", 'r') as tsv_file:
         content = list(row[i] for i in included_cols)
         data.append(content)
 
+
 data.pop(0)
 # square's weight left number
 square_w_l = float(RA_DEC_TUPLE[0]) - (float(FOV_H_V_TUPLE[0])/2)
@@ -62,15 +68,18 @@ square_h_l = float(RA_DEC_TUPLE[1]) - (float(FOV_H_V_TUPLE[1])/2)
 # square's height right number
 square_h_r = float(RA_DEC_TUPLE[1]) + (float(FOV_H_V_TUPLE[1])/2)
 
-filtered_stars = []
+
 # going through ra/dec coordinates and filtering them
 for i in data:
     if (square_w_l <= float(i[0]) <= square_w_r) and (square_h_l <= float(i[1]) <= square_h_r):
         filtered_stars.append(i)
 
 my_sort(filtered_stars)
-result = []
 i = 0
+
+# checking if given number of stars bigger than filtered stars
+if len(filtered_stars) < NUMBER_OF_STARS:
+    NUMBER_OF_STARS = len(filtered_stars)
 
 # distance calculation
 while i < NUMBER_OF_STARS:
@@ -84,7 +93,22 @@ while i < NUMBER_OF_STARS:
 # sorting by distance
 my_sort(result)
 
-for i in result:
+for i in filtered_stars:
     print(i)
+
+# creating and writing new csv file
+header = ['RA', 'DEC', 'ID', 'Magnitude', 'Dis_from_gv_point']
+
+# Creating variable with a current time
+file_name = datetime.now().strftime("%d%m%Y-%H%M%S")
+
+
+with open(file_name, 'w') as f:
+    writer = csv.writer(f)
+    # Writing the header(column names)
+    writer.writerow(header)
+    # Writing results in csv file
+    writer.writerows(result)
+
 
 
